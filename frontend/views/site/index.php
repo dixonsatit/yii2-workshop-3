@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\VarDumper;
-VarDumper::dump(Yii::$app->user->identity,10,true);
+//VarDumper::dump(Yii::$app->user->identity->username,10,true);
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
