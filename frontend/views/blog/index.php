@@ -35,7 +35,24 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
             // 'updated_by',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+              'class' => 'yii\grid\ActionColumn',
+              'buttonOptions'=>['class'=>'btn btn-default'],
+              'template'=>'<div class="btn-group btn-group-sm text-center" role="group"> {view} {update} {delete} </div>',
+              'buttons'=>[
+                'delete'=>function ($url, $model, $key) {
+                $options =[
+                    'class'=>'btn btn-default',
+                    'title' => Yii::t('yii', 'Delete'),
+                    'aria-label' => Yii::t('yii', 'Delete'),
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                    'data-method' => 'post',
+                    'data-pjax' => '0',
+                ];
+                return \Yii::$app->user->can('Admin') ?  Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, $options) : null;
+                }
+              ]
+            ],
         ],
     ]); ?>
 
