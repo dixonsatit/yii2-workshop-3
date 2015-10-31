@@ -18,6 +18,7 @@ use \yii\db\ActiveRecord;
  */
 class Account extends  ActiveRecord implements IdentityInterface
 {
+    public $auth_key;
     /**
      * @inheritdoc
      */

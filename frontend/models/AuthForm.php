@@ -1,5 +1,6 @@
 <?php
 namespace frontend\models;
+use \Yii;
 use yii\base\model;
 use frontend\models\Account;
 
@@ -30,7 +31,13 @@ class AuthForm extends model {
   }
 
   public function login(){
+    if($this->validate()){
+      return Yii::$app->user->login($this->getUser(),3600 * 24 * 1);
+    }else{
+      return false;
+    }
   }
+
   protected function getUser(){
     if($this->_user === null){
       $this->_user = Account::find()->where(

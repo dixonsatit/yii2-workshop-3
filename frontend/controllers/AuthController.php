@@ -35,8 +35,9 @@ class AuthController extends Controller
     {
         $model = new AuthForm();
         if($model->load(Yii::$app->request->post())
-        && $model->validate()){
-
+        && $model->login()){
+          //return $this->goHome();
+          return $this->goBack();
         }else{
           return $this->render('index',[
             'model' => $model
