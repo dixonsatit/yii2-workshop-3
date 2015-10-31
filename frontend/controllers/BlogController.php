@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+use yii\filters\AccessControl;
 /**
  * BlogController implements the CRUD actions for Blog model.
  */
@@ -17,12 +18,34 @@ class BlogController extends Controller
     public function behaviors()
     {
         return [
+            'access'=>[
+               'class'=>AccessControl::className(),
+               'only'=>['index','view','create','update','delete'],
+               'rules'=>[
+                  [
+                    'actions'=>['index','view'],
+                    'allow'=>true,
+                    'roles'=>['?','@']
+                  ],
+                  [
+                    'actions'=>['create','update'],
+                    'allow'=>true,
+                    'roles'=>['Author']
+                  ],
+                  [
+                    'actions'=>['delete'],
+                    'allow'=>true,
+                    'roles'=>['Admin']
+                  ]
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
                 ],
             ],
+
         ];
     }
 
