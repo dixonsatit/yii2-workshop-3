@@ -8,8 +8,8 @@ use frontend\models\BlogSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
 use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 /**
  * BlogController implements the CRUD actions for Blog model.
  */
@@ -103,13 +103,22 @@ class BlogController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if(Yii::$app->user->can('updateOwnBlog',[
+          'model' => $model
+        ])){
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              return $this->redirect(['view', 'id' => $model->id]);
+          } else {
+              return $this->render('update', [
+                  'model' => $model,
+              ]);
+          }
+        }else{
+          Yii::$app->getSession()
+          ->setFlash('success','ไม่มีสิทธิ์เข้าแก้ไข Blog !...');
+          return $this->redirect(['index']);
+          // throw new ForbiddenHttpException(
+          //   'คุณไม่ได้รับอนุญาติให้เข้าใช้งาน!');
         }
     }
 

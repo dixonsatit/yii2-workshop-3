@@ -40,6 +40,14 @@ class RbacController extends Controller {
     $auth->add($view);
     $auth->addChild($user,$view);
 
+    $rule = new \common\rbac\AuthorRule;
+    $auth->add($rule);
+
+    $update = $auth->createPermission('updateOwnBlog');
+    $update->ruleName = $rule->name;
+    $auth->add($update);
+    $auth->addChild($author,$update);
+
     $auth->addChild($user,$report);
     $auth->addChild($author,$user);
     $auth->addChild($admin,$author);
