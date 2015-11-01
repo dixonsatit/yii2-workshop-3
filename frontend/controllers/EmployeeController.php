@@ -2,60 +2,39 @@
 
 namespace frontend\controllers;
 
+
+
 use Yii;
-use common\models\Blog;
-use frontend\models\BlogSearch;
+use frontend\models\Employee;
+use frontend\models\EmployeeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use yii\web\ForbiddenHttpException;
+
 /**
- * BlogController implements the CRUD actions for Blog model.
+ * EmployeeController implements the CRUD actions for Employee model.
  */
-class BlogController extends Controller
+class EmployeeController extends Controller
 {
     public function behaviors()
     {
         return [
-            'access'=>[
-               'class'=>AccessControl::className(),
-               'only'=>['index','view','create','update','delete'],
-               'rules'=>[
-                  [
-                    'actions'=>['index','view'],
-                    'allow'=>true,
-                    'roles'=>['?','@']
-                  ],
-                  [
-                    'actions'=>['create','update'],
-                    'allow'=>true,
-                    'roles'=>['Author']
-                  ],
-                  [
-                    'actions'=>['delete'],
-                    'allow'=>true,
-                    'roles'=>['Admin']
-                  ]
-                ]
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
                 ],
             ],
-
         ];
     }
 
     /**
-     * Lists all Blog models.
+     * Lists all Employee models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new BlogSearch();
+        $searchModel = new EmployeeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,7 +44,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Displays a single Blog model.
+     * Displays a single Employee model.
      * @param integer $id
      * @return mixed
      */
@@ -77,13 +56,13 @@ class BlogController extends Controller
     }
 
     /**
-     * Creates a new Blog model.
+     * Creates a new Employee model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Blog();
+        $model = new Employee();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -95,7 +74,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Updates an existing Blog model.
+     * Updates an existing Employee model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -103,27 +82,18 @@ class BlogController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if(Yii::$app->user->can('updateOwnBlog',[
-          'model' => $model
-        ])){
-          if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              return $this->redirect(['view', 'id' => $model->id]);
-          } else {
-              return $this->render('update', [
-                  'model' => $model,
-              ]);
-          }
-        }else{
-          Yii::$app->getSession()
-          ->setFlash('warning','ไม่มีสิทธิ์เข้าแก้ไข Blog !...');
-          return $this->redirect(['index']);
-          // throw new ForbiddenHttpException(
-          //   'คุณไม่ได้รับอนุญาติให้เข้าใช้งาน!');
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
     }
 
     /**
-     * Deletes an existing Blog model.
+     * Deletes an existing Employee model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -136,22 +106,18 @@ class BlogController extends Controller
     }
 
     /**
-     * Finds the Blog model based on its primary key value.
+     * Finds the Employee model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Blog the loaded model
+     * @return Employee the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Blog::findOne($id)) !== null) {
+        if (($model = Employee::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
-    public function actionCheck(){
-      return $this->render('check');
     }
 }
